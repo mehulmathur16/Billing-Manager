@@ -1,8 +1,15 @@
 import React from 'react';
+import { useSelector, useDispatch } from "react-redux";
+import { closeDeleteModal } from '../actions/modalAction';
+import { deleteBillAmount } from '../actions/amountAction';
+import { setBill } from '../actions/billAction';
 import { NotificationManager } from 'react-notifications';
 import '../styles/deleteform.scss';
 
-function DeleteModal({ setDeleteModal, bills, totalAmount, monthlyBilling, setBills, editDetails, setEditDetails, setOriginalBills, setTotalAmount, setMonthlyBilling }) {
+function DeleteModal({ bills, monthlyBilling, setBills, editDetails, setEditDetails, setMonthlyBilling }) {
+    const state = useSelector((state) => state);
+    const dispatch = useDispatch();
+
     const { id } = editDetails;
 
     const initialState = {
@@ -16,7 +23,7 @@ function DeleteModal({ setDeleteModal, bills, totalAmount, monthlyBilling, setBi
     const handleClose = () => {
         document.getElementsByClassName('home__body-container')[0].style.opacity = 1.0;
         setEditDetails(initialState);
-        setDeleteModal(false);
+        dispatch(closeDeleteModal());
     }
 
     const handleDelete = () => {
@@ -30,15 +37,26 @@ function DeleteModal({ setDeleteModal, bills, totalAmount, monthlyBilling, setBi
             }
         }
 
-
         var newMonthlyBilling = monthlyBilling;
         newMonthlyBilling[parseInt(newBillingData[index].date.substr(0, 2)) - 1] -= newBillingData[index].amount;
         setMonthlyBilling(newMonthlyBilling);
 
-        setTotalAmount(totalAmount - newBillingData[index].amount);
-        newBillingData.splice(index, 1);
+        dispatch(deleteBillAmount(newBillingData[index].amount));
+
         setBills(newBillingData);
-        setOriginalBills(newBillingData);
+
+        const newBillingDataRedux = state.billData.bills;
+        index = -1
+
+        for (var i = 0; i < newBillingDataRedux.length; i++) {
+            if (newBillingDataRedux[i].id === id) {
+                index = i;
+                break;
+            }
+        }
+
+        newBillingDataRedux.splice(index, 1);
+        dispatch(setBill(newBillingDataRedux));
 
         NotificationManager.success('', 'Bill Deleted Successfully!', 1500);
 

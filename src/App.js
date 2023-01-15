@@ -1,14 +1,19 @@
-import './App.css';
+import { Provider } from "react-redux";
 import { NotificationContainer } from 'react-notifications';
 
+import './App.css';
 import Main from './components/Main';
+import store from "./store";
+
 import 'react-notifications/lib/notifications.css';
 
 function App() {
   return (
     <>
-      <Main />
-      <NotificationContainer />
+      <Provider store={store}>
+        <Main />
+        <NotificationContainer />
+      </Provider>
     </>
   );
 }

@@ -1,4 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from "react-redux";
+import { addBillAmount, initializeBillAmount } from '../actions/amountAction';
+import { initializeModal, openEditModal } from '../actions/modalAction';
+import { initializeBill, setBill } from '../actions/billAction';
 
 import BillCard from './BillCard';
 import EditForm from './EditForm';
@@ -10,17 +14,15 @@ import RotateLeftIcon from '@mui/icons-material/RotateLeft';
 
 import '../styles/home.scss';
 
-function Home({ originalBills, setOriginalBills }) {
+function Home() {
+    const state = useSelector((state) => state);
+    const dispatch = useDispatch();
 
-    const [bills, setBills] = useState(originalBills);
-    const [editModal, setEditModal] = useState(false);
-    const [deleteModal, setDeleteModal] = useState(false);
-    const [totalAmount, setTotalAmount] = useState(0);
-    const [budget, setBudget] = useState(36000);
+    const [bills, setBills] = useState(state.billData.bills);
     const [monthlyBilling, setMonthlyBilling] = useState([]);
 
     const initialState = {
-        "id": originalBills.length + 1,
+        "id": state.billData.bills.length + 100 + 1,
         "description": "",
         "category": "",
         "amount": '',
@@ -30,17 +32,17 @@ function Home({ originalBills, setOriginalBills }) {
     const calculateAmount = () => {
         let sum = 0;
 
-        originalBills.map((curr) => {
+        state.billData.bills.map((curr) => {
             sum += curr.amount;
         });
 
-        setTotalAmount(sum);
+        dispatch(addBillAmount(sum));
     }
 
     const calculateMonthlyBilling = () => {
         let expenses = Array(12).fill(0);
 
-        originalBills.map((curr) => {
+        state.billData.bills.map((curr) => {
             const monthNumber = parseInt(curr.date.substr(0, 2));
             expenses[monthNumber - 1] += curr.amount;
         });
@@ -49,7 +51,7 @@ function Home({ originalBills, setOriginalBills }) {
     }
 
     const calculateMinBills = () => {
-        var duplicateArray = originalBills;
+        var duplicateArray = state.billData.bills;
 
         duplicateArray.sort(function (first, second) {
             if (first.amount > second.amount) {
@@ -63,7 +65,7 @@ function Home({ originalBills, setOriginalBills }) {
             return 0;
         });
 
-        let budgetCopy = budget;
+        let budgetCopy = state.amount.budget;
         let idsThatCanBePaid = [];
 
         duplicateArray.map((curr) => {
@@ -77,7 +79,7 @@ function Home({ originalBills, setOriginalBills }) {
             }
         });
 
-        let duplicateOriginalBills = originalBills;
+        let duplicateOriginalBills = state.billData.bills;
 
         duplicateOriginalBills.map((curr) => {
             if (idsThatCanBePaid.includes(curr.id)) {
@@ -85,10 +87,14 @@ function Home({ originalBills, setOriginalBills }) {
             }
         });
 
-        setOriginalBills(duplicateOriginalBills);
+        dispatch(setBill(duplicateOriginalBills));
     }
 
     useEffect(() => {
+        dispatch(initializeBillAmount());
+        dispatch(initializeModal());
+        dispatch(initializeBill());
+
         calculateAmount();
         calculateMonthlyBilling();
         calculateMinBills();
@@ -99,13 +105,14 @@ function Home({ originalBills, setOriginalBills }) {
     const addBill = () => {
         document.getElementsByClassName('home__body-container')[0].style.opacity = 0.5;
         document.getElementsByClassName('home__main')[0].style.background = 'black';
-        setEditModal(true);
+
+        dispatch(openEditModal());
     }
 
     const handleFilter = (e) => {
         var selectedBills = [];
 
-        originalBills.map((curr) => {
+        state.billData.bills.map((curr) => {
             if (curr.category === e.target.value) {
                 selectedBills.push(curr);
             }
@@ -118,14 +125,14 @@ function Home({ originalBills, setOriginalBills }) {
         <div className='home__main'>
 
             {
-                (editModal) ? (
-                    <EditForm setEditModal={setEditModal} editDetails={editDetails} bills={bills} totalAmount={totalAmount} monthlyBilling={monthlyBilling} setBills={setBills} setEditDetails={setEditDetails} setOriginalBills={setOriginalBills} setTotalAmount={setTotalAmount} setMonthlyBilling={setMonthlyBilling} />
+                (state.modal.editModal) ? (
+                    <EditForm editDetails={editDetails} bills={bills} monthlyBilling={monthlyBilling} setBills={setBills} setEditDetails={setEditDetails} setMonthlyBilling={setMonthlyBilling} />
                 ) : null
             }
 
             {
-                (deleteModal) ? (
-                    <DeleteModal setDeleteModal={setDeleteModal} editDetails={editDetails} bills={bills} totalAmount={totalAmount} monthlyBilling={monthlyBilling} setBills={setBills} setEditDetails={setEditDetails} setOriginalBills={setOriginalBills} setTotalAmount={setTotalAmount} setMonthlyBilling={setMonthlyBilling} />
+                (state.modal.deleteModal) ? (
+                    <DeleteModal editDetails={editDetails} bills={bills} monthlyBilling={monthlyBilling} setBills={setBills} setEditDetails={setEditDetails} setMonthlyBilling={setMonthlyBilling} />
                 ) : null
             }
 
@@ -146,7 +153,7 @@ function Home({ originalBills, setOriginalBills }) {
                             </div>
 
                             <div className='home__amount-value'>
-                                {totalAmount}.00 INR
+                                {state.amount.totalAmount}.00 INR
                             </div>
                         </div>
                     </div>
@@ -158,7 +165,7 @@ function Home({ originalBills, setOriginalBills }) {
                             </div>
 
                             <div className='home__amount-value'>
-                                {budget}.00 INR
+                                {state.amount.budget}.00 INR
                             </div>
                         </div>
                     </div>
@@ -191,7 +198,7 @@ function Home({ originalBills, setOriginalBills }) {
                     <div style={{ display: 'flex', padding: '1.2rem' }}>
                         <RotateLeftIcon style={{ cursor: 'pointer' }} onClick={() => {
                             document.getElementsByClassName('home__sort-select')[0].value = '';
-                            setBills(originalBills);
+                            setBills(state.billData.bills);
                         }} />
                     </div>
                 </div>
@@ -202,11 +209,15 @@ function Home({ originalBills, setOriginalBills }) {
 
                 <div className='home__cards-container' >
                     {
-                        (bills) ? (
+                        (bills.length > 0) ? (
                             bills.map((curr) => {
-                                return <BillCard details={curr} key={curr.id} setEditModal={setEditModal} setEditDetails={setEditDetails} setDeleteModal={setDeleteModal} />;
+                                return <BillCard details={curr} key={curr.id} setEditDetails={setEditDetails} />;
                             })
-                        ) : null
+                        ) : (
+                            <div>
+                                <h3 style={{ color: 'black' }}>No Cards to show!</h3>
+                            </div>
+                        )
                     }
                 </div >
             </div>

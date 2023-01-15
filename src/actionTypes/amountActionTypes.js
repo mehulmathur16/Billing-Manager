@@ -1,0 +1,4 @@
+export const ADD_BILL_AMOUNT = "ADD_BILL_AMOUNT";
+export const DELETE_BILL_AMOUNT = "DELETE_BILL_AMOUNT";
+export const EDIT_BILL_AMOUNT = "EDIT_BILL_AMOUNT";
+export const INIT_AMOUNT = "INIT_AMOUNT";

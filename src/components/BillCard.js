@@ -1,4 +1,6 @@
 import React from 'react';
+import { useDispatch } from "react-redux";
+import { openEditModal, openDeleteModal } from '../actions/modalAction';
 
 import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
 import EventIcon from '@mui/icons-material/Event';
@@ -7,7 +9,8 @@ import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
 
 import '../styles/card.scss';
 
-function BillCard({ details, setEditModal, setEditDetails, setDeleteModal }) {
+function BillCard({ details, setEditDetails }) {
+    const dispatch = useDispatch();
     const { description, category, amount, date } = details;
 
     const canBePaid = (details.canBePaid) ? details.canBePaid : null;
@@ -50,14 +53,14 @@ function BillCard({ details, setEditModal, setEditDetails, setDeleteModal }) {
             <div className='card-main__edit-delete-container'>
                 <div className='card-main__edit-icon-container' onClick={() => {
                     handleModal();
-                    setEditModal(true);
+                    dispatch(openEditModal());
                 }}>
                     <BorderColorRoundedIcon style={{ color: 'rgb(255, 151, 0)' }} />
                 </div>
 
                 <div className='card-main__delete-icon-container' onClick={() => {
                     handleModal();
-                    setDeleteModal(true);
+                    dispatch(openDeleteModal());
                 }}>
                     <DeleteRoundedIcon style={{ color: 'rgb(241, 46, 70)' }} />
                 </div>

@@ -1,8 +1,14 @@
 import React from 'react';
+import { useDispatch } from "react-redux";
+import { addBillAmount, editBillAmount } from '../actions/amountAction';
+import { closeEditModal } from '../actions/modalAction';
+import { setBill } from '../actions/billAction';
+
 import { NotificationManager } from 'react-notifications';
 import '../styles/editform.scss';
 
-function EditForm({ setEditModal, editDetails, bills, totalAmount, monthlyBilling, setBills, setEditDetails, setOriginalBills, setTotalAmount, setMonthlyBilling }) {
+function EditForm({ editDetails, bills, monthlyBilling, setBills, setEditDetails, setMonthlyBilling }) {
+    const dispatch = useDispatch();
     const { id, description, category, amount, date } = editDetails;
 
     const initialState = {
@@ -15,7 +21,7 @@ function EditForm({ setEditModal, editDetails, bills, totalAmount, monthlyBillin
 
     const handleClose = () => {
         document.getElementsByClassName('home__body-container')[0].style.opacity = 1.0;
-        setEditModal(false);
+        dispatch(closeEditModal());
         setEditDetails(initialState);
     }
 
@@ -41,8 +47,10 @@ function EditForm({ setEditModal, editDetails, bills, totalAmount, monthlyBillin
             newMonthlyBilling[parseInt(convertedDate.substr(0, 2)) - 1] += newData.amount;
             setMonthlyBilling(newMonthlyBilling);
             setBills([...bills, newData]);
-            setTotalAmount(totalAmount + newData.amount);
-            setOriginalBills([...bills, newData]);
+
+            dispatch(addBillAmount(newData.amount));
+
+            dispatch(setBill([...bills, newData]));
 
             NotificationManager.success('', 'Bill Added Successfully!', 1500);
 
@@ -63,10 +71,12 @@ function EditForm({ setEditModal, editDetails, bills, totalAmount, monthlyBillin
         newMonthlyBilling[parseInt(newData.date.substr(0, 2)) - 1] += newData.amount;
         setMonthlyBilling(newMonthlyBilling);
 
-        setTotalAmount(totalAmount + newData.amount - newBillData[index].amount);
+        dispatch(editBillAmount(newBillData[index].amount, newData.amount));
+
         newBillData[index] = newData;
         setBills(newBillData);
-        setOriginalBills(newBillData);
+
+        dispatch(setBill(newBillData));
 
         NotificationManager.success('', 'Bill Edited Successfully!', 1500);
 

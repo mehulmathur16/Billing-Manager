@@ -23,7 +23,6 @@ const BillingChart = ({ monthlyBilling }) => {
         <div>
             <Line data={data}
                 options={{
-                    // responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
                         legend: {
