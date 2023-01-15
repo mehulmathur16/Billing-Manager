@@ -73,6 +73,7 @@ function Home() {
                 budgetCopy -= curr.amount;
                 curr.canBePaid = true;
                 idsThatCanBePaid.push(curr.id);
+                console.log(curr.id);
             }
             else if (curr.canBePaid) {
                 curr.canBePaid = false;
@@ -80,7 +81,6 @@ function Home() {
         });
 
         let duplicateOriginalBills = state.billData.bills;
-
         duplicateOriginalBills.map((curr) => {
             if (idsThatCanBePaid.includes(curr.id)) {
                 curr.canBePaid = true;

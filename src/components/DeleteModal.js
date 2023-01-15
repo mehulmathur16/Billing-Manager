@@ -13,12 +13,51 @@ function DeleteModal({ bills, monthlyBilling, setBills, editDetails, setEditDeta
     const { id } = editDetails;
 
     const initialState = {
-        "id": bills.length + 1,
+        "id": bills.length + 1 + 100,
         "description": "",
         "category": "",
         "amount": '',
         "date": ""
     };
+
+    const calculateMinBills = () => {
+        var duplicateArray = state.billData.bills;
+
+        duplicateArray.sort(function (first, second) {
+            if (first.amount > second.amount) {
+                return -1;
+            }
+
+            if (first.amount < second.amount) {
+                return 1;
+            }
+
+            return 0;
+        });
+
+        let budgetCopy = state.amount.budget;
+        let idsThatCanBePaid = [];
+
+        duplicateArray.map((curr) => {
+            if (budgetCopy - curr.amount >= 0) {
+                budgetCopy -= curr.amount;
+                curr.canBePaid = true;
+                idsThatCanBePaid.push(curr.id);
+            }
+            else if (curr.canBePaid) {
+                curr.canBePaid = false;
+            }
+        });
+
+        let duplicateOriginalBills = state.billData.bills;
+        duplicateOriginalBills.map((curr) => {
+            if (idsThatCanBePaid.includes(curr.id)) {
+                curr.canBePaid = true;
+            }
+        });
+
+        dispatch(setBill(duplicateOriginalBills));
+    }
 
     const handleClose = () => {
         document.getElementsByClassName('home__body-container')[0].style.opacity = 1.0;
@@ -43,7 +82,7 @@ function DeleteModal({ bills, monthlyBilling, setBills, editDetails, setEditDeta
 
         dispatch(deleteBillAmount(newBillingData[index].amount));
 
-        setBills(newBillingData);
+        // setBills(newBillingData);
 
         const newBillingDataRedux = state.billData.bills;
         index = -1
@@ -57,9 +96,11 @@ function DeleteModal({ bills, monthlyBilling, setBills, editDetails, setEditDeta
 
         newBillingDataRedux.splice(index, 1);
         dispatch(setBill(newBillingDataRedux));
+        setBills(newBillingDataRedux);
 
         NotificationManager.success('', 'Bill Deleted Successfully!', 1500);
 
+        calculateMinBills();
         handleClose();
     }
 
