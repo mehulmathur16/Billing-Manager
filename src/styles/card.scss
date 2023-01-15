@@ -1,0 +1,82 @@
+.card-main {
+    display: flex;
+    flex-direction: column;
+    border: none;
+    font-family: 'Segoe UI';
+    width: 30vw;
+    background: white;
+    border-radius: 0.5rem;
+    margin-bottom: 2rem;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+
+    @mixin icon-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.4rem;
+        border: none;
+        border-radius: 0.4rem;
+        cursor: pointer;
+    }
+
+    &__description {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        
+        padding-top: 0.7rem;
+        padding-left: 1rem;
+        padding-right: 1rem;
+        font-size: 1.6rem;
+        font-weight: 600;
+    }
+
+    &__category {
+        font-size: 1rem;
+        color: grey;
+        padding-bottom: 1.1rem;
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    &__icon-detail-container {
+        display: flex;
+        flex-direction: row;
+        padding-right: 1rem;
+        padding-left: 0.9rem;
+        padding-bottom: 0.5rem;
+    }
+
+    &__icon {
+        display: flex;
+        align-items: center;
+    }
+
+    &__icon-description{
+        font-size: 1rem;
+        color: #36454F;
+        margin-left: 1rem;
+    }
+
+    &__edit-delete-container {
+        display: flex;
+        flex-direction: row;
+        padding: 0.5rem;
+        justify-content: end;
+        padding-left: 1rem;
+        padding-right: 1rem;
+        padding-bottom: 0.7rem;
+        padding-top: 0.5rem;
+    }
+
+    &__edit-icon-container {
+        @include icon-container;
+        background-color: #fff5e6;
+    }
+
+    &__delete-icon-container {
+        @include icon-container;
+        background-color: #ffe6e9;
+        margin-left: 1rem;
+    }
+}

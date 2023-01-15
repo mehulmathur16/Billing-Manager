@@ -1,0 +1,82 @@
+.home {
+    &__main {
+        background-color: white;
+    }
+
+    &__cards-container {
+        display: flex;
+        justify-content: space-around;
+        flex-wrap: wrap;
+        // background: #e8e6ff;
+        background: white;
+        padding-top: 1.2rem;
+    }
+
+    &__add-incvoice-container {
+        display: flex;
+        justify-content: space-between;
+        width: 20vw;
+        padding: 1rem;
+        background: #004792;
+        margin-left: 1.2rem;
+        border: none;
+        border-radius: 0.4rem;
+        color: white;
+        font-weight: 500;
+        cursor: pointer;
+    }
+
+    &__add-and-filter-container {
+        display: flex;
+        flex-direction: row;
+    }
+
+    &__sort-select {
+        width: 15rem;
+        padding: 1.3rem;
+        border-radius: 0.4rem;
+        font-size: 0.9rem;
+        border: none;
+        background: black;
+        color: white;
+        font-weight: 600;
+        margin-left: 3rem;
+        cursor: pointer;
+    }
+
+    &__amount-heading {
+        font-weight: 600;
+        font-size: 1.6rem;
+        margin-bottom: 0.5rem;
+    }
+
+    &__amount-value {
+        font-size: 1.2rem;
+        font-weight: 600;
+        font-size: 1.2rem;
+    }
+
+    &__amount-container {
+        border: none;
+        border-radius: 0.4rem;
+        box-shadow: rgb(100 100 111 / 20%) 0px 7px 29px 0px;
+        width: 20vw;
+        padding: 1rem;
+        background: #0a2351;
+        color: white;
+    }
+
+    &__chart-container {
+        display: flex;
+        width: 80vw;
+        height: 80vh;
+        position: relative;
+        margin: auto;
+        margin-bottom: 1rem;
+    }
+}
+
+canvas {
+    width: 80vw !important;
+    height: 83vh !important;
+}

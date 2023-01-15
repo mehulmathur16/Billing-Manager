@@ -1,0 +1,61 @@
+.edit-form {
+    @mixin button-style {
+        padding: 0.5rem;
+        border: none;
+        border-radius: 0.5rem;
+        color: white;
+        cursor: pointer;
+    }
+
+    &__container {
+        position: fixed;
+        margin-left: 35vw;
+        margin-top: 25vh;
+        background-color: white;
+        padding: 1.4rem;
+        border: none;
+        border-radius: 0.5rem;
+        z-index: 1;
+    }
+
+    &__field-container {
+        display: flex;
+        flex-direction: row;
+        padding-bottom: 0.8rem;
+    }
+
+    &__field-input {
+        margin-right: 2.5rem;
+        margin-bottom: 1.2rem;
+        width: 8rem;
+    }
+
+    &__button-container {
+        display: flex;
+        justify-content: end;
+        padding-top: 1.2rem;
+    }
+
+    &__submit-button {
+        @include button-style();
+        background: green;
+    }
+
+    &__close-button {
+        @include button-style();
+        background: rgb(241, 46, 70);
+        margin-left: 1.2rem;
+    }
+}
+
+input {
+    padding: 0.3rem;
+    outline: none;
+    width: 10.1rem;
+}
+
+select {
+    padding: 0.3rem;
+    outline: none;
+    width: 11rem;
+}

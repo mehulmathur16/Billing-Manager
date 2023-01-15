@@ -1,0 +1,43 @@
+.delete-form {
+    @mixin button-style {
+        padding: 0.5rem;
+        border: none;
+        border-radius: 0.5rem;
+        color: white;
+        cursor: pointer;
+    }
+
+    &__container {
+        position: fixed;
+        margin-left: 35vw;
+        margin-top: 25vh;
+        background-color: white;
+        padding: 1.4rem;
+        border: none;
+        border-radius: 0.5rem;
+        z-index: 1;
+    }
+
+    &__header {
+        font-size: 1.5rem;
+        font-weight: 600;
+    } 
+
+    &__buttons-container {
+        display: flex;
+        flex-direction: row;
+        padding-bottom: 0.8rem;
+        margin-top: 2rem;
+        justify-content: space-evenly;
+    }
+
+    &__yes-button {
+        @include button-style();
+        background-color: green;
+    }
+
+    &__no-button {
+        @include button-style();
+        background-color: rgb(241, 46, 70);
+    }
+}
